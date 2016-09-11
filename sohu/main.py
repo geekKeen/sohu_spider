@@ -10,6 +10,10 @@ _sentinel = object()
 
 
 def check_url(url_queue, data_queue, level):
+    """
+    处理 url_queue中的 url，筛选掉已经浏览过或超过设定level的url
+    并将符合条件的 url，放入 data_queue
+    """
     storage = Storage()
     while True:
         url, curr_level = url_queue.get()
@@ -22,6 +26,12 @@ def check_url(url_queue, data_queue, level):
 
 
 def handle(url_queue, data_queue, level, thread_id):
+    """
+    处理 data_queue 的函数， 可设定多个线程处理，
+    主要功能是打开 url，确定页面是否能够到达
+    如果能够到达此页面， 找出所有 m.sohu.com 域名下的页面，放入 url_queue
+    thread_id 是自己设置的数字字符串，仅为了查看结果，无实义
+    """
     try:
         while True:
             url, curr_level = data_queue.get(timeout=5)
